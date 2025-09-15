@@ -3,7 +3,8 @@ package shoppingcart;
 import java.util.*;
 
 public class ShoppingCart {
-    // List to store items added to the shopping cart
+
+// A list used to keep track of products inside the shopping cart
     private final List<Product> items = new ArrayList<>();
 
     // Adds a product to the cart after checking for duplicate IDs
@@ -60,7 +61,7 @@ public class ShoppingCart {
         System.out.println("❌ Item with ID " + id + " not found in the cart.");
     }
 
-    // Calculates and returns the total price of all items in the cart
+    // Computes and gives back the overall cost of every item in the cart 
     public double calculateTotalPrice() {
         double total = 0.0;
         for (Product product : items) {
@@ -69,3 +70,4 @@ public class ShoppingCart {
         return total;
     }
 }
+
