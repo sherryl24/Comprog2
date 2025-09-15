@@ -52,7 +52,7 @@ public class ShoppingCartApp {
         scanner.close();  // Close the scanner resource
     }
 
-    // Displays the main shopping cart menu options to the user
+  // Displays the shopping cart’s primary choices for the user  
     private static void displayMenu() {
         System.out.println("\n=== Shopping Cart Menu ===");
         System.out.println("1. Add Electronics");
@@ -136,7 +136,7 @@ public class ShoppingCartApp {
         cart.updateItem(id, newName, newPrice); // Perform the update
     }
 
-    // Removes an item from the cart by its ID
+  // Deletes a product from the shopping cart using its ID  
     private static void removeItem(Scanner sc, ShoppingCart cart) {
         int id = getIntInput(sc, "Enter ID of the item to remove: ");
         sc.nextLine(); // Consume leftover newline
