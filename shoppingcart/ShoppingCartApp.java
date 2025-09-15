@@ -9,28 +9,50 @@ public class ShoppingCartApp {
         ShoppingCart cart = new ShoppingCart();
         int choice;
 
+        // Main loop to display menu and perform actions based on user input
         do {
-            displayMenu();
-            choice = getIntInput(scanner, "Enter your choice: ");
+            displayMenu();  // Show the options menu
+            choice = getIntInput(scanner, "Enter your choice: ");  // Get user's menu choice
 
             switch (choice) {
-                case 1 -> addItem(scanner, cart, "Electronics");
-                case 2 -> addItem(scanner, cart, "Grocery");
-                case 3 -> addItem(scanner, cart, "Home Appliances");
-                case 4 -> addItem(scanner, cart, "School Supplies");
-                case 5 -> addItem(scanner, cart, "Cosmetics");
-                case 6 -> cart.showItems();
-                case 7 -> updateItem(scanner, cart);
-                case 8 -> removeItem(scanner, cart);
-                case 0 -> System.out.println("👋 Exiting the application. Goodbye!");
-                default -> System.out.println("⚠️ Invalid choice. Please try again.");
+                case 1:
+                    addItem(scanner, cart, "Electronics");
+                    break;
+                case 2:
+                    addItem(scanner, cart, "Grocery");
+                    break;
+                case 3:
+                    addItem(scanner, cart, "Home Appliances");
+                    break;
+                case 4:
+                    addItem(scanner, cart, "School Supplies");
+                    break;
+                case 5:
+                    addItem(scanner, cart, "Cosmetics");
+                    break;
+                case 6:
+                    cart.showItems();  // Show all items in the cart
+                    break;
+                case 7:
+                    updateItem(scanner, cart);  // Update an item in the cart
+                    break;
+                case 8:
+                    removeItem(scanner, cart);  // Remove an item from the cart
+                    break;
+                case 0:
+                    System.out.println("👋 Exiting the application. Goodbye!");
+                    break;
+                default:
+                    System.out.println("⚠️ Invalid choice. Please try again.");
+                    break;
             }
 
-        } while (choice != 0);
+        } while (choice != 0);  // Keep running until user chooses to exit
 
-        scanner.close();
+        scanner.close();  // Close the scanner resource
     }
 
+    // Displays the main shopping cart menu options to the user
     private static void displayMenu() {
         System.out.println("\n=== Shopping Cart Menu ===");
         System.out.println("1. Add Electronics");
@@ -44,6 +66,7 @@ public class ShoppingCartApp {
         System.out.println("0. Exit");
     }
 
+    // Reads an integer input from the user safely, handling invalid input
     private static int getIntInput(Scanner sc, String prompt) {
         while (true) {
             try {
@@ -51,11 +74,12 @@ public class ShoppingCartApp {
                 return sc.nextInt();
             } catch (InputMismatchException e) {
                 System.out.println("❌ Invalid input. Please enter a number.");
-                sc.next(); // Consume the invalid input to prevent an infinite loop
+                sc.next(); // Clear invalid input to avoid infinite loop
             }
         }
     }
 
+    // Reads a double (decimal) input from the user safely, handling invalid input
     private static double getDoubleInput(Scanner sc, String prompt) {
         while (true) {
             try {
@@ -63,43 +87,59 @@ public class ShoppingCartApp {
                 return sc.nextDouble();
             } catch (InputMismatchException e) {
                 System.out.println("❌ Invalid input. Please enter a number.");
-                sc.next(); // Consume the invalid input
+                sc.next(); // Clear invalid input
             }
         }
     }
 
+    // Adds a new item to the cart based on the selected category
     private static void addItem(Scanner sc, ShoppingCart cart, String category) {
         int id = getIntInput(sc, "Enter ID: ");
-        sc.nextLine(); // Consume the leftover newline
+        sc.nextLine(); // Consume leftover newline
         System.out.print("Enter Item: ");
         String name = sc.nextLine();
         double price = getDoubleInput(sc, "Enter Price: ");
 
-        // This next line is crucial to prevent the scanner bug for the next loop iteration
-        sc.nextLine();
+        sc.nextLine(); // Prevent scanner issues in next input
 
+        // Create and add the appropriate item type to the cart
         switch (category) {
-            case "Electronics" -> cart.addItem(new Electronics(id, name, price));
-            case "Grocery" -> cart.addItem(new Grocery(id, name, price));
-            case "Home Appliances" -> cart.addItem(new HomeAppliances(id, name, price));
-            case "School Supplies" -> cart.addItem(new SchoolSupplies(id, name, price));
-            case "Cosmetics" -> cart.addItem(new Cosmetics(id, name, price));
+            case "Electronics":
+                cart.addItem(new Electronics(id, name, price));
+                break;
+            case "Grocery":
+                cart.addItem(new Grocery(id, name, price));
+                break;
+            case "Home Appliances":
+                cart.addItem(new HomeAppliances(id, name, price));
+                break;
+            case "School Supplies":
+                cart.addItem(new SchoolSupplies(id, name, price));
+                break;
+            case "Cosmetics":
+                cart.addItem(new Cosmetics(id, name, price));
+                break;
+            default:
+                System.out.println("⚠️ Unknown category.");
+                break;
         }
     }
 
+    // Updates the name and price of an existing item in the cart
     private static void updateItem(Scanner sc, ShoppingCart cart) {
         int id = getIntInput(sc, "Enter ID of the item to update: ");
-        sc.nextLine(); // Consume the leftover newline
+        sc.nextLine(); // Consume leftover newline
         System.out.print("Enter new Name: ");
         String newName = sc.nextLine();
         double newPrice = getDoubleInput(sc, "Enter new Price: ");
-        sc.nextLine(); // Consume the leftover newline
-        cart.updateItem(id, newName, newPrice);
+        sc.nextLine(); // Consume leftover newline
+        cart.updateItem(id, newName, newPrice); // Perform the update
     }
 
+    // Removes an item from the cart by its ID
     private static void removeItem(Scanner sc, ShoppingCart cart) {
         int id = getIntInput(sc, "Enter ID of the item to remove: ");
-        sc.nextLine(); // Consume the leftover newline
-        cart.removeItem(id);
+        sc.nextLine(); // Consume leftover newline
+        cart.removeItem(id); // Remove the item
     }
 }
