@@ -9,10 +9,11 @@ public class Cosmetics extends Product {
         super(id, name, price); // Call the constructor of the abstract Product class
     }
 
-    // Overrides the abstract display method to print product details in a category-specific format
+  // Overrides the display() method from Product to provide a customized output.
     @Override
     public void display() {
         System.out.println("[Cosmetics] " + getId() + " - " + getName() + " : $" + String.format("%.2f", getPrice()));
     }
 }
+
 
