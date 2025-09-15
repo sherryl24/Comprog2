@@ -3,7 +3,8 @@ package shoppingcart;
 // Represents a product in the "Cosmetics" category
 public class Cosmetics extends Product {
 
-    // Constructor to initialize a Cosmetics product with ID, name, and price
+
+// Builds a Cosmetics instance using the provided ID, name, and price 
     public Cosmetics(int id, String name, double price) {
         super(id, name, price); // Call the constructor of the abstract Product class
     }
@@ -14,3 +15,4 @@ public class Cosmetics extends Product {
         System.out.println("[Cosmetics] " + getId() + " - " + getName() + " : $" + String.format("%.2f", getPrice()));
     }
 }
+
