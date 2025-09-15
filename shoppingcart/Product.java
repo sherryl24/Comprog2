@@ -39,6 +39,7 @@ public abstract class Product {
         this.price = price;
     }
 
-    // Abstract method to be implemented by subclasses to display product details
+  // An abstract method that must be defined in each subclass to show the product's information
     public abstract void display();
 }
+
