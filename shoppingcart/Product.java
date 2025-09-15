@@ -1,13 +1,13 @@
 package shoppingcart;
 
-// Abstract base class representing a general product
+// An abstract superclass that defines the blueprint for all product types
 public abstract class Product {
     // Common attributes for all product types
     private int id;
     private String name;
     private double price;
 
-    // Constructor to initialize common product fields
+  // Initializes the basic fields of a product (id, name, price)
     public Product(int id, String name, double price) {
         this.id = id;
         this.name = name;
@@ -42,4 +42,5 @@ public abstract class Product {
   // An abstract method that must be defined in each subclass to show the product's information
     public abstract void display();
 }
+
 
