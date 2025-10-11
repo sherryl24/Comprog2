@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Shopping Cart</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1><span class="emoji">🛒</span> Java Shopping Cart Application</h1>
+        <p>Welcome to your personal shopping cart!</p>
+    </header>
+
+    <div class="menu-panel">
+        <h2>Add New Item (Cases 1-5)</h2>
+
+        <form th:action="@{/cart/add}" method="post" class="add-form">
+
+            <div class="form-group">
+                <label for="category">Category:</label>
+                <select id="category" name="category" required>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Grocery">Grocery</option>
+                    <option value="HomeAppliances">Home Appliances</option>
+                    <option value="SchoolSupplies">School Supplies</option>
+                    <option value="Cosmetics">Cosmetics</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="itemId">ID:</label>
+                <input type="number" id="itemId" name="id" placeholder="Enter unique ID (e.g., 101)" required>
+            </div>
+
+            <div class="form-group">
+                <label for="itemName">Item Name:</label>
+                <input type="text" id="itemName" name="name" placeholder="Enter item name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="itemPrice">Price:</label>
+                <input type="number" id="itemPrice" name="price" step="0.01" min="0" placeholder="Enter price" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary full-width-button">Add Item</button>
+        </form>
+
+        <hr>
+
+        <h2>Cart Actions (Cases 7 & 8)</h2>
+        <div class="action-group">
+            <form th:action="@{/cart/update}" method="post" class="update-form">
+                <h3>Update Item</h3>
+                <input type="number" name="id" placeholder="ID to Update" required>
+                <input type="text" name="newName" placeholder="New Name" required>
+                <input type="number" name="newPrice" step="0.01" placeholder="New Price" required>
+                <button type="submit" class="btn btn-secondary full-width-button">Update Item</button>
+            </form>
+
+            <form th:action="@{/cart/remove}" method="post" class="remove-form">
+                <h3>Remove Item</h3>
+                <input type="number" name="id" placeholder="ID to Remove" required>
+                <button type="submit" class="btn btn-danger full-width-button">Remove Item</button>
+            </form>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="cart-display">
+        <h2>Your Current Cart Items</h2>
+
+        <div th:if="${#lists.isEmpty(cartItems)}" class="empty-cart">
+            Your cart is currently empty. Start adding items above!
+        </div>
+
+        <table class="cart-table" th:unless="${#lists.isEmpty(cartItems)}">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${cartItems}">
+                <td th:text="${item.id}">101</td>
+                <td th:text="${item.name}">Example Item</td>
+                <td th:text="${item.category}">Category</td>
+                <td th:text="${#numbers.formatCurrency(item.price)}">$1.99</td>
+                <td>
+                    <form th:action="@{/cart/remove}" method="post">
+                        <input type="hidden" name="id" th:value="${item.id}">
+                        <button type="submit" class="btn btn-small btn-danger">Remove</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Summary -->
+        <div th:unless="${#lists.isEmpty(cartItems)}" class="cart-summary">
+            <strong>Total Items:</strong> <span th:text="${#lists.size(cartItems)}">5</span> |
+            <strong>Grand Total:</strong> <span th:text="${#numbers.formatCurrency(cartTotal)}">$1,500.00</span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

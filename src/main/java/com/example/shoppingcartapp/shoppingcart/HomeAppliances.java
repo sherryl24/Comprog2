@@ -1,4 +1,4 @@
-package shoppingcart;
+package com.example.shoppingcartapp.shoppingcart;
 
 public class HomeAppliances extends Product {
     public HomeAppliances(int id, String name, double price) {

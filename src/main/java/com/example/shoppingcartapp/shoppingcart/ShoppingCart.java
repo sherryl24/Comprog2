@@ -1,62 +1,60 @@
-package shoppingcart;
+package com.example.shoppingcartapp.shoppingcart;
 
 import java.util.*;
 
 public class ShoppingCart {
     private final List<Product> items = new ArrayList<>();
-
-    // Add item with duplicate check
-    public void addItem(Product product) {
+    public boolean addItem(Product product) {
         for (Product p : items) {
             if (p.getId() == product.getId()) {
                 System.out.println(" Item with ID " + product.getId() + " already exists in the cart.");
-                return;
+                return false;
             }
         }
         items.add(product);
         System.out.println(" Added: " + product.getName() + " | Current items in cart: " + items.size());
+        return true;
     }
 
-    // Show all items in the cart
+    // Show all items in the cart (Console method, unused by the web app)
     public void showItems() {
         if (items.isEmpty()) {
             System.out.println(" Your cart is currently empty.");
         } else {
             System.out.println("\n--- Cart Items ---");
-            for (Product p : items) {
-                p.display();
-            }
+            // The display() method is part of your console app structure, so we leave it.
+            // for (Product p : items) { p.display(); }
             System.out.println("--------------------");
             System.out.printf(" Total Price: $%.2f%n", calculateTotalPrice());
             System.out.println("Total items: " + items.size());
         }
     }
 
-    // Update an item's details by its ID
-    public void updateItem(int id, String newName, double newPrice) {
+    public boolean updateItem(int id, String newName, double newPrice) {
         for (Product p : items) {
             if (p.getId() == id) {
                 p.setName(newName);
                 p.setPrice(newPrice);
                 System.out.println("✏ Successfully updated item with ID: " + id);
-                return;
+                return true;
             }
         }
         System.out.println(" Item with ID " + id + " not found in the cart.");
+        return false;
     }
 
-    // Remove an item by its ID
-    public void removeItem(int id) {
+    public boolean removeItem(int id) {
         Iterator<Product> iterator = items.iterator();
         while (iterator.hasNext()) {
             Product p = iterator.next();
             if (p.getId() == id) {
                 iterator.remove();
                 System.out.println("🗑️ Removed item with ID: " + id + " | Remaining items: " + items.size());
-                return;
+                return true;
             }
         }
         System.out.println(" Item with ID " + id + " not found in the cart.");
+        return false;
     }
 
     // Calculates and returns the total price of all items in the cart
@@ -66,5 +64,9 @@ public class ShoppingCart {
             total += product.getPrice();
         }
         return total;
+    }
+    public List<Product> getItems() {
+        // Return a read-only list for safety
+        return Collections.unmodifiableList(items);
     }
 }
