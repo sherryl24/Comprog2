@@ -1,8 +1,18 @@
 package com.example.shoppingcartapp.shoppingcart;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("SchoolSupplies")
 public class SchoolSupplies extends Product {
-    public SchoolSupplies(int id, String name, double price) {
-        super(id, name, price);
+
+    public SchoolSupplies() {
+        // JPA requires a no-argument constructor
+    }
+
+    public SchoolSupplies(String name, double price) {
+        super(name, price);
     }
 
     @Override

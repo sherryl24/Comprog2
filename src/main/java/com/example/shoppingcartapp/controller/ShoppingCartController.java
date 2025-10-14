@@ -1,7 +1,8 @@
 package com.example.shoppingcartapp.controller;
 
-import com.example.shoppingcartapp.shoppingcart.ShoppingCart;
+import com.example.shoppingcartapp.shoppingcart.ProductRepository;
 import com.example.shoppingcartapp.shoppingcart.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,92 +15,83 @@ import java.util.List;
 @Controller
 public class ShoppingCartController {
 
-    // The cart instance used across all requests
-    private final ShoppingCart cart = new ShoppingCart();
+    @Autowired
+    private ProductRepository productRepository;
 
-    @GetMapping("/") // Maps to the root path
+    @GetMapping("/")
     public String showCart(Model model) {
-
-        List<Product> cartItems = cart.getItems();
+        // Fetch all products from the database
+        List<Product> cartItems = productRepository.findAll();
         model.addAttribute("cartItems", cartItems);
 
-        double total = cart.calculateTotalPrice();
+        double total = cartItems.stream()
+                .mapToDouble(Product::getPrice)
+                .sum();
         model.addAttribute("cartTotal", total);
 
         return "index";
     }
 
     @PostMapping("/cart/add")
-    public String addItem(@RequestParam int id,
-                          @RequestParam String name,
+    public String addItem(@RequestParam String name,
                           @RequestParam double price,
                           @RequestParam String category,
                           RedirectAttributes redirectAttributes) {
 
-        // Use a switch statement to create the correct subclass based on category
         Product newItem = switch (category) {
-            case "Electronics" -> new Electronics(id, name, price);
-            case "Grocery" -> new Grocery(id, name, price);
-            case "HomeAppliances" -> new HomeAppliances(id, name, price);
-            case "SchoolSupplies" -> new SchoolSupplies(id, name, price);
-            case "Cosmetics" -> new Cosmetics(id, name, price);
+            case "Electronics" -> new Electronics(name, price);
+            case "Grocery" -> new Grocery(name, price);
+            case "HomeAppliances" -> new HomeAppliances(name, price);
+            case "SchoolSupplies" -> new SchoolSupplies(name, price);
+            case "Cosmetics" -> new Cosmetics(name, price);
             default -> null;
         };
 
         if (newItem != null) {
-            // Check the boolean return value to handle duplicates
-            boolean added = cart.addItem(newItem);
-
-            if (added) {
-                redirectAttributes.addAttribute("status", "success");
-                redirectAttributes.addAttribute("message", name + " added successfully!");
-            } else {
-                // If not added, it's a duplicate ID (handled by ShoppingCart.java)
-                redirectAttributes.addAttribute("status", "error");
-                redirectAttributes.addAttribute("message", "Item ID " + id + " already exists. Please choose a unique ID or use Update.");
-            }
+            productRepository.save(newItem);
+            redirectAttributes.addFlashAttribute("status", "success");
+            redirectAttributes.addFlashAttribute("message", name + " added successfully!");
         } else {
-            redirectAttributes.addAttribute("status", "error");
-            redirectAttributes.addAttribute("message", "Invalid category selected.");
+            redirectAttributes.addFlashAttribute("status", "error");
+            redirectAttributes.addFlashAttribute("message", "Invalid category selected.");
         }
 
-        // Redirect back to the main cart page, which is now /
         return "redirect:/";
     }
 
     @PostMapping("/cart/update")
-    public String updateItem(@RequestParam int id,
+    public String updateItem(@RequestParam Long id,
                              @RequestParam String newName,
                              @RequestParam double newPrice,
                              RedirectAttributes redirectAttributes) {
 
-        // Relies on cart.updateItem() returning a boolean
-        boolean updated = cart.updateItem(id, newName, newPrice);
+        Product product = productRepository.findById(id).orElse(null);
 
-        if (updated) {
-            redirectAttributes.addAttribute("status", "success");
-            redirectAttributes.addAttribute("message", "Item ID " + id + " updated successfully to " + newName + ".");
+        if (product != null) {
+            product.setName(newName);
+            product.setPrice(newPrice);
+            productRepository.save(product);
+            redirectAttributes.addFlashAttribute("status", "success");
+            redirectAttributes.addFlashAttribute("message", "Item ID " + id + " updated successfully.");
         } else {
-            redirectAttributes.addAttribute("status", "error");
-            redirectAttributes.addAttribute("message", "Item ID " + id + " not found for update.");
+            redirectAttributes.addFlashAttribute("status", "error");
+            redirectAttributes.addFlashAttribute("message", "Item ID " + id + " not found.");
         }
 
         return "redirect:/";
     }
 
     @PostMapping("/cart/remove")
-    public String removeItem(@RequestParam int id,
+    public String removeItem(@RequestParam Long id,
                              RedirectAttributes redirectAttributes) {
 
-        // Relies on cart.removeItem() returning a boolean
-        boolean removed = cart.removeItem(id);
-
-        if (removed) {
-            redirectAttributes.addAttribute("status", "success");
-            redirectAttributes.addAttribute("message", "Item ID " + id + " removed successfully.");
+        if (productRepository.existsById(id)) {
+            productRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("status", "success");
+            redirectAttributes.addFlashAttribute("message", "Item ID " + id + " removed successfully.");
         } else {
-            redirectAttributes.addAttribute("status", "error");
-            redirectAttributes.addAttribute("message", "Item ID " + id + " not found for removal.");
+            redirectAttributes.addFlashAttribute("status", "error");
+            redirectAttributes.addFlashAttribute("message", "Item ID " + id + " not found.");
         }
 
         return "redirect:/";

@@ -1,4 +1,6 @@
-package com.example.shoppingcartapp.shoppingcart;
+package com.example.shoppingcartapp;
+
+import com.example.shoppingcartapp.shoppingcart.*;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
