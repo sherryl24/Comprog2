@@ -158,3 +158,9 @@ select {
     color: #856404;
     border-radius: 4px;
 }
+
+.form-group {
+    display: flex;
+    align-items: center; /* vertically center label and input */
+    margin-bottom: 10px;
+}

@@ -1,7 +1,5 @@
 package com.example.shoppingcartapp.shoppingcart;
 
-import com.example.shoppingcartapp.shoppingcart.Product;
-import com.example.shoppingcartapp.shoppingcart.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
